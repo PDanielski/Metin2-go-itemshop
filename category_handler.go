@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"mt2is/pkg/category"
 	"net/http"
+	"sort"
 
 	"github.com/gorilla/sessions"
 )
@@ -44,9 +45,12 @@ func NewCategoryHandler(catProvider category.NodeTreeProvider) (*CategoryHandler
 //ServeHTTP receives the requets and writes the executed template using the given writer
 func (c *CategoryHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	roots := c.catTree.Roots()
+
 	store := sessions.NewFilesystemStore("var/sessions", []byte("secret key"))
-	sess, _ := store.Get(request, "prova")
-	sess.Values["prova"] = "ciao"
+
+	sess, _ := store.Get(request, "prova2")
+	fmt.Println(sess.Values["prova"])
+	sess.Values["prova"] = "ciao2"
 	sess.Save(request, writer)
 	c.template.Execute(writer, roots)
 }
@@ -67,7 +71,7 @@ type SQLNodeTreeProvider struct {
  *At the same time nodes which are roots (has no parent) are filtered for the latter return
  */
 func (p *SQLNodeTreeProvider) Provide() (*category.NodeTree, error) {
-	rows, err := p.db.Query("SELECT category_id, name, trailer, description, link_segment, parent_id FROM itemshop.categories")
+	rows, err := p.db.Query("SELECT category_id, name, trailer, description, link_segment, parent_id, priority FROM itemshop.categories")
 
 	if err != nil {
 		return nil, fmt.Errorf("Can't fetch the categories: %v", err)
@@ -80,12 +84,13 @@ func (p *SQLNodeTreeProvider) Provide() (*category.NodeTree, error) {
 
 	for rows.Next() {
 		var parentID int
+		var priority int
 		cat := &category.Category{}
-		if err := rows.Scan(&cat.ID, &cat.Name, &cat.Trailer, &cat.Description, &cat.LinkSegment, &parentID); err != nil {
+		if err := rows.Scan(&cat.ID, &cat.Name, &cat.Trailer, &cat.Description, &cat.LinkSegment, &parentID, &priority); err != nil {
 			return nil, fmt.Errorf("Can't map sql row to category: %v", err)
 		}
 
-		node := category.NewNode(cat)
+		node := category.NewNode(cat, priority)
 
 		idToNode[cat.ID] = node
 		if parentID > 0 {
@@ -109,11 +114,14 @@ func (p *SQLNodeTreeProvider) Provide() (*category.NodeTree, error) {
 				}
 				node.AddChild(idToNode[childID])
 			}
+			node.SortChildren()
 			if node.IsRoot() {
 				roots = append(roots, node)
 			}
 		}
 	}
+
+	sort.Slice(roots, func(i, j int) bool { return roots[i].Priority < roots[j].Priority })
 
 	catTree := category.NewNodeTree(roots)
 	return catTree, nil

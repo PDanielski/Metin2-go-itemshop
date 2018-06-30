@@ -28,17 +28,19 @@ func main() {
 		panic(fmt.Errorf("Can't connect to database: %v", err))
 	}
 
-	/*currencies, err := initCurrencies()
+	currencies, err := initCurrencies()
 	if err != nil {
 		panic(fmt.Errorf("Can't read currencies: %v", err))
-	}*/
+	}
+	_ = currencies // TODO clean
+
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	catNodeProvider := &SQLNodeTreeProvider{db}
 	catHandler, err := NewCategoryHandler(catNodeProvider)
 	if err != nil {
 		panic(err)
 	}
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 	http.Handle("/category/", catHandler)
 
 	http.ListenAndServe(":8080", nil)

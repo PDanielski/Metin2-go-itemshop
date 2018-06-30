@@ -1,5 +1,7 @@
 package category
 
+import "sort"
+
 //Category is the representation of a item category
 type Category struct {
 	ID          int
@@ -34,11 +36,12 @@ type Node struct {
 	category *Category
 	parent   *Node
 	children []*Node
+	Priority int
 }
 
 //NewNode creates a new node holding the category value. It has methods for helping building the final tree
-func NewNode(category *Category) *Node {
-	return &Node{category: category}
+func NewNode(category *Category, priority int) *Node {
+	return &Node{category: category, Priority: priority}
 }
 
 //Category returns the category hold by the node
@@ -74,4 +77,9 @@ func (c *Node) AddChild(node *Node) {
 //IsRoot checks if the node is root, a.k.a., has a nil parent
 func (c *Node) IsRoot() bool {
 	return c.parent == nil
+}
+
+//SortChildren sorts the children of the node based on the Priority value.
+func (c *Node) SortChildren() {
+	sort.Slice(c.children, func(i, j int) bool { return c.children[i].Priority < c.children[j].Priority })
 }
