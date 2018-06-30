@@ -1,0 +1,47 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{{ template "title" . }}</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ {{ block "css" . }}
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/normalize.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+  {{ end }}
+</head>
+
+<body>
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+    {{ block "header" . }}
+    <div id="header">
+        <div class="flex-container flex-space-between px-3">
+            <div><small>Benvenuto, MucioSecsi</small></div>
+            <div>
+                <div class="flex-container">
+                    <div class="mx-2"><small>400</small> <img class="currency-icon" src="/assets/img/gold-icon.png"/></div>
+                    <div class="mx-2"><small>728</small> <img class="currency-icon" src="/assets/img/biscuits-icon.png"/></div>
+                    <div class="mx-2"><small>1284</small> <img class="currency-icon" src="/assets/img/warpoints-icon.png"/></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-container">
+                <div class="f-1"></div>
+                <div class="f-4 flex-container flex-space-evenly">
+                        <div>
+                            <input class="input-1" type="text" placeholder="Cerca...">
+                        </div>
+                        <button class="btn-big btn-gold">ACQUISTA GOLD <img src="/assets/img/gold-icon.png" style="
+                        width: 24px;
+                    "></button>
+                </div>
+            </div>
+    </div>
+    {{ end }}
+    {{ template "content" . }}
+</body>
+</html>
