@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/sessions"
 )
 
 const configDir = "conf.json"
@@ -36,12 +37,21 @@ func main() {
 
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
+	sessStore := sessions.NewCookieStore([]byte("secret key"))
+	checkAuth := SecurityMiddleware(sessStore)
+
 	catNodeProvider := &SQLNodeTreeProvider{db}
 	catHandler, err := NewCategoryHandler(catNodeProvider)
 	if err != nil {
 		panic(err)
 	}
-	http.Handle("/category/", catHandler)
+	http.Handle("/category/", checkAuth(catHandler))
+	http.HandleFunc("/login", func(writer http.ResponseWriter, request *http.Request) {
+		sess, _ := sessStore.Get(request, "auth")
+		sess.Values["accountID"] = 10
+		sess.Save(request, writer)
+		fmt.Fprintln(writer, "Account id set")
+	})
 
 	http.ListenAndServe(":8080", nil)
 }

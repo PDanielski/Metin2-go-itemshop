@@ -53,6 +53,7 @@ func (c *CategoryHandler) ServeHTTP(writer http.ResponseWriter, request *http.Re
 	sess.Values["prova"] = "ciao2"
 	sess.Save(request, writer)
 	c.template.Execute(writer, roots)
+	fmt.Fprintln(writer, request.Context().Value(accIDKey))
 }
 
 //SQLNodeTreeProvider provides a multi-root hierarchical tree made of categories
