@@ -15,12 +15,12 @@ func NewNode(category *Category, priority int) *Node {
 	return &Node{category: category, Priority: priority}
 }
 
-//Category returns the category hold by the node
+//Category returns the category held by the node
 func (c *Node) Category() *Category {
 	return c.category
 }
 
-//Children returns the children nodes hold by the node
+//Children returns the children nodes
 func (c *Node) Children() []*Node {
 	return c.children
 }
@@ -30,22 +30,22 @@ func (c *Node) HasChildren() bool {
 	return len(c.children) > 0
 }
 
-//Parent returns the parent node hold by the node
+//Parent returns the parent node
 func (c *Node) Parent() *Node {
 	return c.parent
 }
 
-//SetParent overrides the parent of a node, with another node
+//SetParent overrides the parent with another node
 func (c *Node) SetParent(node *Node) {
 	c.parent = node
 }
 
-//AddChild append a child node to the node
+//AddChild adds a child node
 func (c *Node) AddChild(node *Node) {
 	c.children = append(c.children, node)
 }
 
-//IsRoot checks if the node is root, a.k.a., has a nil parent
+//IsRoot checks if the node is a root, therefore has not parent
 func (c *Node) IsRoot() bool {
 	return c.parent == nil
 }
