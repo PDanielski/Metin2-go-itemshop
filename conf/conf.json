@@ -1,0 +1,5 @@
+{
+    "templateDir": "./templates",
+    "databaseDsn": "root@tcp(localhost)/",
+    "secret": "m2sNy8n!o)uh*YZEtZ81D*9@JTBr$h7rW@Y^X%Gt"
+}
