@@ -1,0 +1,5 @@
+{
+    "templateDir": "./templates",
+    "databaseDsn": "user@protocol(host)/",
+    "secret": "supersecret"
+}
