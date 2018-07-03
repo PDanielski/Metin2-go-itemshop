@@ -1,21 +1,21 @@
 package category
 
-//NodeTree implementors allows to retrieve all the top level root categories
-type NodeTree struct {
-	rootNodes []*Node
-}
-
-//Roots return category node tree roots
-func (nt *NodeTree) Roots() []*Node {
-	return nt.rootNodes
-}
-
-//NodeTreeProvider implementation are used to retrieve NodeTrees
+//NodeTreeProvider allows a polymorphic approach for retrieving node trees.
 type NodeTreeProvider interface {
 	Provide() (*NodeTree, error)
 }
 
-//NewNodeTree constructs a new node tree given root nodes
+//NodeTree is a collection of root nodes
+type NodeTree struct {
+	rootNodes []*Node
+}
+
+//Roots returns the collection of root nodes
+func (nt *NodeTree) Roots() []*Node {
+	return nt.rootNodes
+}
+
+//NewNodeTree constructs a new node tree with the root nodes given in the input
 func NewNodeTree(nodes []*Node) *NodeTree {
 	return &NodeTree{nodes}
 }
