@@ -7,8 +7,6 @@ import (
 	"mt2is/pkg/category"
 	"net/http"
 	"sort"
-
-	"github.com/gorilla/sessions"
 )
 
 //CategoryHandler is a HTTP Handler which displays items in categories
@@ -45,15 +43,8 @@ func NewCategoryHandler(catProvider category.NodeTreeProvider) (*CategoryHandler
 //ServeHTTP receives the requets and writes the executed template using the given writer
 func (c *CategoryHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	roots := c.catTree.Roots()
-
-	store := sessions.NewFilesystemStore("var/sessions", []byte("secret key"))
-
-	sess, _ := store.Get(request, "prova2")
-	fmt.Println(sess.Values["prova"])
-	sess.Values["prova"] = "ciao2"
-	sess.Save(request, writer)
 	c.template.Execute(writer, roots)
-	fmt.Fprintln(writer, request.Context().Value(accIDKey))
+	fmt.Printf("%+v\n", request.Context().Value(accKey))
 }
 
 //SQLNodeTreeProvider provides a multi-root hierarchical tree made of categories

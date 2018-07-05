@@ -40,7 +40,7 @@ func (repo SQLRepository) ByID(id ID) (*Account, bool) {
 
 		return nil, false
 	}
-	return New(id, login, password, socialID, email, gold, warpoints, biscuits), true
+	return New(id, login, NewPassword(password, true), socialID, email, gold, warpoints, biscuits), true
 }
 
 //ByLogin is used for searching an account by its login
@@ -60,5 +60,5 @@ func (repo SQLRepository) ByLogin(login string) (*Account, bool) {
 	if err != nil {
 		return nil, false
 	}
-	return New(id, login, password, socialID, email, gold, warpoints, biscuits), true
+	return New(id, login, NewPassword(password, true), socialID, email, gold, warpoints, biscuits), true
 }

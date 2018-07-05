@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"mt2is/pkg/account"
 	"mt2is/pkg/wallet"
 	"net/http"
 
@@ -12,10 +13,11 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-const configDir = "conf.json"
+const configDir = "conf/conf.json"
 
 type Configuration struct {
 	DatabaseDsn string
+	TemplateDir string
 }
 
 func main() {
@@ -38,7 +40,8 @@ func main() {
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	sessStore := sessions.NewCookieStore([]byte("secret key"))
-	checkAuth := SecurityMiddleware(sessStore)
+	repo := account.NewSQLRepository(db)
+	checkAuth := SecurityMiddleware(sessStore, repo)
 
 	catNodeProvider := &SQLNodeTreeProvider{db}
 	catHandler, err := NewCategoryHandler(catNodeProvider)
@@ -46,13 +49,8 @@ func main() {
 		panic(err)
 	}
 	http.Handle("/category/", checkAuth(catHandler))
-	http.HandleFunc("/login", func(writer http.ResponseWriter, request *http.Request) {
-		sess, _ := sessStore.Get(request, "auth")
-		sess.Values["accountID"] = 10
-		sess.Save(request, writer)
-		fmt.Fprintln(writer, "Account id set")
-	})
-
+	loginHandler := &LoginHandler{repo}
+	http.Handle("/login", loginHandler)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -81,7 +79,7 @@ func initDB(dsn string) (*sql.DB, error) {
 }
 
 func initCurrencies() ([]*wallet.Currency, error) {
-	fJSON, err := ioutil.ReadFile("currencies.json")
+	fJSON, err := ioutil.ReadFile("conf/currencies.json")
 	if err != nil {
 		return nil, err
 	}

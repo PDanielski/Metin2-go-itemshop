@@ -18,28 +18,16 @@
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
     {{ block "header" . }}
-    <div id="header">
-        <div class="flex-container flex-space-between px-3">
-            <div><small>Benvenuto, MucioSecsi</small></div>
-            <div>
-                <div class="flex-container">
-                    <div class="mx-2"><small>400</small> <img class="currency-icon" src="/assets/img/gold-icon.png"/></div>
-                    <div class="mx-2"><small>728</small> <img class="currency-icon" src="/assets/img/biscuits-icon.png"/></div>
-                    <div class="mx-2"><small>1284</small> <img class="currency-icon" src="/assets/img/warpoints-icon.png"/></div>
-                </div>
-            </div>
+    <div id="main-topbar" class="flex-container flex-space-between px-3 container-lg">
+        <div class="f-3">
+            <ol class="inline-menu inline-menu-flat inline-menu-blue mx-3">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Categorie</a></li>
+            </ol>
         </div>
-        <div class="flex-container">
-                <div class="f-1"></div>
-                <div class="f-4 flex-container flex-space-evenly">
-                        <div>
-                            <input class="input-1" type="text" placeholder="Cerca...">
-                        </div>
-                        <button class="btn-big btn-gold">ACQUISTA GOLD <img src="/assets/img/gold-icon.png" style="
-                        width: 24px;
-                    "></button>
-                </div>
-            </div>
+        <div class="f-1">
+            Private zone
+        </div>
     </div>
     {{ end }}
     {{ template "content" . }}

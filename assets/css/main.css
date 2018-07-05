@@ -101,7 +101,7 @@ html {
 }
 body {
     font-family: 'Open Sans', sans-serif;
-    background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('https://metin2warlords.net/build/images/header-bg.8f84ede9.png') #212121 no-repeat;
+    background: #1a1a1a;
     background-position-x: center;
     height:100%;
     font-size: 1em;
@@ -278,6 +278,31 @@ body {
 .link-white:hover {
     color: #f94444;
 }
+
+.inline-menu-flat {
+    margin: 0;
+    padding : 0;
+}
+
+.inline-menu > li {
+    display: inline-block;
+}
+
+.inline-menu > li > a {
+    display: block;
+    text-decoration: none;
+    color: #FFF;
+    padding: 10px 20px;
+}
+
+#main-topbar {
+    background: #064587;
+}
+#main-topbar .inline-menu > li > a:hover {
+    background: #205ea0;
+}
+
+
 
 
 

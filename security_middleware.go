@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"mt2is/pkg/account"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -9,10 +10,10 @@ import (
 
 type key string
 
-const accIDKey key = "accountID"
+const accKey key = "account"
 
 //SecurityMiddleware is a middleware used to wrap handlers which need an accountID in their context.
-func SecurityMiddleware(store sessions.Store) Middleware {
+func SecurityMiddleware(store sessions.Store, repo account.Repository) Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 			sess, err := store.Get(request, "auth")
@@ -21,13 +22,21 @@ func SecurityMiddleware(store sessions.Store) Middleware {
 				return
 			}
 
-			accountID, ok := sess.Values["accountID"]
+			tmpAccID, ok := sess.Values["accountID"]
 			if !ok {
 				http.Error(writer, "Authentication needed", 401)
 				return
 			}
 
-			ctx := context.WithValue(request.Context(), accIDKey, accountID.(int))
+			accountID := account.ID(tmpAccID.(int))
+			acc, ok := repo.ByID(accountID)
+
+			if !ok {
+				http.Error(writer, "You are logged with an account which does not exist", 401)
+				return
+			}
+
+			ctx := context.WithValue(request.Context(), accKey, acc)
 			newRequest := request.WithContext(ctx)
 			h.ServeHTTP(writer, newRequest)
 		})

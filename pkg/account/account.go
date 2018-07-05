@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-//AccountID is an abstraction layer on top of the actual type of the identifier.
+//ID is an abstraction layer on top of the actual type of the identifier.
 //If the identifier changes type, it will be easier to refactor
 type ID int
 
@@ -12,7 +12,7 @@ type ID int
 type Account struct {
 	id           ID
 	login        string
-	password     string
+	password     Password
 	socialID     string
 	email        string
 	creationTime time.Time
@@ -22,7 +22,7 @@ type Account struct {
 }
 
 //New returns a new instance of an Account. If the account id is unknown during instantation, provide 0 instead.
-func New(id ID, login, password, socialID, email string, gold, warpoints, biscuits int) *Account {
+func New(id ID, login string, password Password, socialID string, email string, gold, warpoints, biscuits int) *Account {
 	return &Account{id: id, login: login, password: password, socialID: socialID, email: email, gold: gold, warpoints: warpoints, biscuits: biscuits}
 }
 
@@ -42,7 +42,7 @@ func (acc *Account) Login() string {
 }
 
 //Password is the password used for signing in the game and website
-func (acc *Account) Password() string {
+func (acc *Account) Password() Password {
 	return acc.password
 }
 

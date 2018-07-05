@@ -50,7 +50,7 @@ func (c *Node) IsRoot() bool {
 	return c.parent == nil
 }
 
-//SortChildren sorts the children of the node based on the Priority value.
+//SortChildren sorts the children based on the Priority value.
 func (c *Node) SortChildren() {
 	sort.Slice(c.children, func(i, j int) bool { return c.children[i].Priority < c.children[j].Priority })
 }
